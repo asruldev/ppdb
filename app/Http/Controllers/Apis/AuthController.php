@@ -14,7 +14,19 @@ class AuthController extends Controller
     public function __construct()
     {
         // ini jg bisa diletakkan di route api
-        $this->middleware(['auth:api', 'verified'], ['except' => ['login', 'register', 'verify', 'notice', 'resend']]);
+        $this->middleware(['auth:api', 'verified'], ['except' => ['login', 'register', 'verify', 'notice', 'resend', 'index']]);
+    }
+
+    public function index() {
+        $users = User::all();
+
+        foreach ($users as $user) {
+            if ($user->hasRole('operation')) {
+                $user['operation'] = $user->hasRole('operation');
+            }
+        }
+
+        return response()->json($user);
     }
 
     public function register(Request $request)
